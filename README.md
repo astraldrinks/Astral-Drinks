@@ -18,3 +18,6 @@ Pacote final auditado com 21 arquivos, todos diretamente na raiz do repositório
 - Tablet horizontal: 2048×1535
 - Tablet vertical: 1535×2048
 - App: 2048×2048
+
+## Versão recalibrada
+Hotspots recalibrados pixel a pixel nas novas artes para desktop, mobile, tablet horizontal e tablet vertical.

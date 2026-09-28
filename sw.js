@@ -1,4 +1,4 @@
-const CACHE_NAME="astral-drinks-pwa-v5-final";
+const CACHE_NAME="astral-drinks-pwa-v6-recalibrado";
 const STATIC_FILES=["./","./index.html","./style.css","./app-config.js","./app.js","./hotspots.json","./manifest.webmanifest","./offline.html","./capa-app.png","./capa-mobile.png","./capa-tablet-vertical.png","./capa-tablet-horizontal.png","./capa-desktop.png","./icon-192.png","./icon-512.png","./icon-maskable-512.png","./apple-touch-icon.png","./favicon-32.png"];
 self.addEventListener("install",e=>{e.waitUntil(caches.open(CACHE_NAME).then(c=>c.addAll(STATIC_FILES)));self.skipWaiting();});
 self.addEventListener("activate",e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith("astral-drinks-pwa-")&&k!==CACHE_NAME).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
