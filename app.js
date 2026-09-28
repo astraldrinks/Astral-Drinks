@@ -1,48 +1,48 @@
 (() => {
   "use strict";
-  const config = window.ASTRAL_CONFIG || {};
-  const stage = document.getElementById("stage");
-  const cover = document.getElementById("cover");
+  const cfg = window.ASTRAL_CONFIG?.links || {};
   const nav = document.getElementById("hotspots");
   const labels = {orcamento:"Orçamento",instagram:"Instagram",whatsapp:"WhatsApp",email:"E-mail",produtos:"Produtos",sobre:"Sobre"};
-  const hotspots = {"desktop":{"orcamento":[72.4,22.0,21.8,5.7],"instagram":[72.4,29.3,21.8,5.7],"whatsapp":[72.4,36.6,21.8,5.7],"email":[72.4,43.9,21.8,5.7],"produtos":[72.4,51.2,21.8,5.7],"sobre":[72.4,58.5,21.8,5.7]},"tablet-horizontal":{"orcamento":[74.0,23.4,23.2,5.8],"instagram":[74.0,30.4,23.2,5.8],"whatsapp":[74.0,37.4,23.2,5.8],"email":[74.0,44.4,23.2,5.8],"produtos":[74.0,51.4,23.2,5.8],"sobre":[74.0,58.4,23.2,5.8]},"tablet-vertical":{"orcamento":[27.3,60.5,46.5,5.2],"instagram":[27.3,66.6,46.5,5.2],"whatsapp":[27.3,72.7,46.5,5.2],"email":[27.3,78.8,46.5,5.2],"produtos":[27.3,84.9,46.5,5.2],"sobre":[27.3,91.0,46.5,5.2]},"mobile":{"orcamento":[23.0,52.5,54.5,5.0],"instagram":[23.0,59.1,54.5,5.0],"whatsapp":[23.0,65.7,54.5,5.0],"email":[23.0,72.3,54.5,5.0],"produtos":[23.0,78.9,54.5,5.0],"sobre":[23.0,85.5,54.5,5.0]}};
-  const names = Object.keys(labels);
-  function layout() {
-    const width = window.innerWidth;
-    if (width <= 600) return "mobile";
-    if (width <= 1200) return window.matchMedia("(orientation: portrait)").matches ? "tablet-vertical" : "tablet-horizontal";
+  let layouts = null;
+  const mode = () => {
+    const portrait = matchMedia("(orientation: portrait)").matches;
+    const coarse = matchMedia("(pointer: coarse)").matches;
+    if (portrait && innerWidth < 600) return "mobile";
+    if (portrait) return "tablet-vertical";
+    if (coarse) return "tablet-horizontal";
     return "desktop";
-  }
-  function render() {
-    const boxes = hotspots[layout()];
-    const fragment = document.createDocumentFragment();
-    for (const name of names) {
-      const url = config[name];
-      if (typeof url !== "string" || !/^(https:\/\/|mailto:)/i.test(url)) continue;
-      const [x,y,w,h] = boxes[name];
-      const a = document.createElement("a");
-      a.className = "hotspot";
-      a.href = url;
-      a.setAttribute("aria-label", labels[name]);
-      a.title = labels[name];
-      a.style.cssText = `left:${x}%;top:${y}%;width:${w}%;height:${h}%;`;
-      if (!url.startsWith("mailto:")) {a.target="_blank";a.rel="noopener noreferrer";}
-      fragment.appendChild(a);
+  };
+  function renderHotspots(){
+    if(!layouts || !nav) return;
+    const layout = layouts[mode()]; if(!layout) return;
+    nav.replaceChildren();
+    for(const [key,b] of Object.entries(layout.boxes)){
+      const href=cfg[key]; if(!href) continue;
+      const a=document.createElement("a");
+      a.className="hotspot"; a.href=href; a.setAttribute("aria-label",labels[key]||key);
+      a.style.left=b[0]+"%";a.style.top=b[1]+"%";a.style.width=b[2]+"%";a.style.height=b[3]+"%";
+      if(key!=="email"){a.target="_blank";a.rel="noopener noreferrer";}
+      nav.appendChild(a);
     }
-    nav.replaceChildren(fragment);
   }
-  let queued = false;
-  function onResize() {if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;render();});}
-  window.addEventListener("resize", onResize, {passive:true});
-  window.addEventListener("orientationchange", onResize, {passive:true});
-  render();
-  // SW kept for feature parity, but not registered automatically: prevents stale offline caches
-  // from masking a fresh GitHub Pages deployment. Existing SWs are unregistered on HTTPS.
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-      navigator.serviceWorker.getRegistrations().then(regs => {
-        regs.forEach(reg => { if (reg.scope.startsWith(new URL("./", location.href).href)) reg.unregister(); });
-      }).catch(() => {});
-    }, {once:true});
-  }
+  fetch("./hotspots.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw Error(`hotspots.json ${r.status}`);return r.json();}).then(d=>{layouts=d;renderHotspots();}).catch(e=>console.error("Astral Drinks: hotspots",e));
+  addEventListener("resize",renderHotspots,{passive:true}); addEventListener("orientationchange",renderHotspots,{passive:true});
+
+  if("serviceWorker" in navigator){addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(e=>console.error("Service Worker:",e)),{once:true});}
+  let installPrompt=null; const btn=document.getElementById("installApp"), modal=document.getElementById("iosInstallModal"), close=document.getElementById("closeIosInstall"), title=document.getElementById("iosInstallTitle"), inst=document.getElementById("installInstructions");
+  const ios=/iphone|ipad|ipod/i.test(navigator.userAgent);
+  const standalone=matchMedia("(display-mode: standalone)").matches || navigator.standalone===true;
+  const mobileTablet=matchMedia("(pointer: coarse)").matches || matchMedia("(max-width: 1024px)").matches;
+  if(mobileTablet && !standalone && btn) btn.hidden=false;
+  addEventListener("beforeinstallprompt",e=>{e.preventDefault();installPrompt=e;if(btn)btn.hidden=false;});
+  btn?.addEventListener("click",async()=>{
+    if(installPrompt){installPrompt.prompt();await installPrompt.userChoice;installPrompt=null;return;}
+    if(title&&inst){
+      if(ios){title.textContent="Instalar Astral Drinks no iPhone/iPad";inst.innerHTML='<p>Abra no Safari e siga:</p><ol><li>Toque em <strong>Compartilhar</strong>.</li><li>Toque em <strong>Adicionar à Tela de Início</strong>.</li><li>Ative <strong>Abrir como App da Web</strong>, se aparecer.</li><li>Toque em <strong>Adicionar</strong>.</li></ol>';}
+      else{title.textContent="Instalar Astral Drinks";inst.innerHTML='<p>No Chrome ou navegador compatível:</p><ol><li>Abra o menu do navegador.</li><li>Toque em <strong>Instalar aplicativo</strong> ou <strong>Adicionar à tela inicial</strong>.</li><li>Confirme em <strong>Instalar</strong>.</li></ol>';}
+    }
+    if(modal)modal.hidden=false;
+  });
+  close?.addEventListener("click",()=>{if(modal)modal.hidden=true;}); modal?.addEventListener("click",e=>{if(e.target===modal)modal.hidden=true;});
+  addEventListener("appinstalled",()=>{installPrompt=null;if(btn)btn.hidden=true;});
 })();

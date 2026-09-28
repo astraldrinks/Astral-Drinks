@@ -3,25 +3,40 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Astral Drinks</title>
+  <meta name="description" content="Astral Drinks — coquetelaria, eventos, produtos e experiências.">
   <meta name="theme-color" content="#0b0a09">
-  <meta name="description" content="Astral Drinks — coquetelaria, bares e eventos. Solicite orçamento e conheça nossos produtos.">
-  <title>Astral Drinks | Coquetelaria e Eventos</title>
-  <link rel="icon" type="image/png" href="./favicon-32.png">
-  <link rel="apple-touch-icon" href="./apple-touch-icon.png">
+  <link rel="canonical" href="https://www.astraldrinks.com.br/">
   <link rel="manifest" href="./manifest.webmanifest">
-  <link rel="stylesheet" href="./style.css?v=20260927b">
+  <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png">
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Astral Drinks">
+  <link rel="stylesheet" href="./style.css">
+  <script src="./app-config.js" defer></script>
+  <script src="./app.js" defer></script>
 </head>
 <body>
-  <main class="stage" id="stage">
-    <picture id="picture">
-      <source media="(max-width: 600px)" srcset="./capa-mobile.png">
-      <source media="(min-width: 601px) and (max-width: 1200px) and (orientation: portrait)" srcset="./capa-tablet-vertical.png">
-      <source media="(min-width: 601px) and (max-width: 1200px) and (orientation: landscape)" srcset="./capa-tablet-horizontal.png">
-      <img id="cover" src="./capa-desktop.png" alt="Astral Drinks: conheça nossos canais, serviços e produtos" width="1920" height="1080" fetchpriority="high" draggable="false">
-    </picture>
-    <nav id="hotspots" aria-label="Acessos Astral Drinks"></nav>
+  <main class="pagina" aria-label="Astral Drinks">
+    <section class="cartao" id="cartao" aria-label="Acessos rápidos Astral Drinks">
+      <picture>
+        <source media="(orientation: landscape) and (pointer: coarse)" srcset="./capa-tablet-horizontal.png">
+        <source media="(orientation: landscape) and (pointer: fine)" srcset="./capa-desktop.png">
+        <source media="(orientation: portrait) and (min-width: 600px)" srcset="./capa-tablet-vertical.png">
+        <img class="capa" src="./capa-mobile.png" alt="Astral Drinks — canais oficiais" width="1080" height="1920" decoding="async" fetchpriority="high">
+      </picture>
+      <nav id="hotspots" aria-label="Canais Astral Drinks"></nav>
+    </section>
   </main>
-  <script src="./app-config.js?v=20260927b"></script>
-  <script src="./app.js?v=20260927b"></script>
+  <button id="installApp" class="install-app" type="button" hidden>Instalar App</button>
+  <div id="iosInstallModal" class="ios-install-modal" hidden role="dialog" aria-modal="true" aria-labelledby="iosInstallTitle">
+    <div class="ios-install-card">
+      <button id="closeIosInstall" class="ios-install-close" type="button" aria-label="Fechar">×</button>
+      <h2 id="iosInstallTitle">Instalar Astral Drinks</h2>
+      <div id="installInstructions"></div>
+    </div>
+  </div>
+  <noscript><p class="aviso-js">Ative o JavaScript para usar os botões do Astral Drinks.</p></noscript>
 </body>
 </html>

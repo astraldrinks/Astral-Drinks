@@ -1,27 +1,56 @@
 {
+  "id": "./",
   "name": "Astral Drinks",
   "short_name": "Astral Drinks",
+  "description": "Astral Drinks — coquetelaria, eventos, produtos e experiências.",
+  "lang": "pt-BR",
+  "dir": "ltr",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#080706",
-  "theme_color": "#080706",
+  "orientation": "any",
+  "background_color": "#0b0a09",
+  "theme_color": "#0b0a09",
+  "categories": [
+    "business",
+    "food",
+    "lifestyle"
+  ],
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "./icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "./icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "./icon-maskable-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "./capa-mobile.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Astral Drinks no celular"
+    },
+    {
+      "src": "./capa-desktop.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Astral Drinks no computador"
     }
   ]
 }
