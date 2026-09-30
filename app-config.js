@@ -6,6 +6,6 @@ window.ASTRAL_CONFIG = {
     whatsapp: "https://wa.me/5583988000483",
     email: "mailto:astraldrinks@gmail.com",
     produtos: "https://produtos-astral-m5fmnp3.gamma.site/",
-    sobre: "https://sobre-astral-drinks-pdlfhec.gamma.site/"
+    sobre: "https://proposta-comercial-gldz831.gamma.site/"
   }
 };
